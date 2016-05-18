@@ -10,13 +10,17 @@ var stage = new PIXI.Container();
 // add background to stage..
 stage.addChild(background);
 
+//Load textures for character, finish and whirlpools
 var texture = PIXI.Texture.fromImage("hoegarth.png");
 var whirltex = PIXI.Texture.fromImage("whirlpool.png");
 var finishtex = PIXI.Texture.fromImage("finishline.png");
+
+//Load text for endgame
 var endgameText = new PIXI.Text("You were sucked in a whirlpool!", {font:"25px Arial", fill:"yellow"});
 var endgameText2 = new PIXI.Text("Hit Space to try again!", {font:"25px Arial", fill:"yellow"});
 endgameText2.position.y = 20;
 
+//load non-whirlpool items, and set positions and anchors.
 var character = new PIXI.Sprite(texture);
 var finishLine = new PIXI.Sprite(finishtex);
 
@@ -50,6 +54,9 @@ finishLine.position.y = 380;
 stage.addChild(character);
 stage.addChild(finishLine);
 
+//To be run at the beginning of every level
+//Resets character, deletes whirlpools, makes new whirlpools
+//for the appropriate level.
 function gameStart(){
   isRunning = true;
   character.rotation = 0;
@@ -75,6 +82,7 @@ function gameStart(){
   }
 }
 
+//Listen for keys. WASD for movement, space for reset.
 function keydownEventHandler(e){
   if (e.keyCode == 87){//W
     if(character.position.y > 20){
@@ -108,7 +116,7 @@ function keydownEventHandler(e){
 }
 
 document.addEventListener('keydown', keydownEventHandler);
-
+//Actions when you get sucked by a whirlpool
 function endgame(){
   isRunning = false;
   stage.addChild(endgameText);
@@ -117,7 +125,8 @@ function endgame(){
   levelBoard.setText("Level: " + level);
 }
 
-
+//Game/animation loop. Rotates the whirlpools and does checking to see if you are close
+//Also checks for proximity to the goal, then advances to the next level.
 function animate(){
   requestAnimationFrame(animate);
   for(var i = 0; i < whirls.length; i++){
