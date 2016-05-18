@@ -19,7 +19,13 @@ var character = new PIXI.Sprite(texture);
 var finishLine = new PIXI.Sprite(finishtex);
 
 var level = 1;
-var levelBoard = new PIXI.Text("Level: " + level, {font:"50px Arial", fill:"yellow"});
+var levelBoard = new PIXI.Text("Level: " + level, {font:"10px Arial", fill:"yellow"});
+
+levelBoard.anchor.x = 0.5;
+levelBoard.anchor.y = 0.5;
+levelBoard.position.x = 380;
+levelBoard.position.y = 20;
+stage.addChild(levelBoard);
 
 var whirls = [];
 
@@ -46,8 +52,8 @@ function fiveMore(){
     var whirlpool = new PIXI.Sprite(whirltex);
     whirlpool.anchor.x = 0.5;
     whirlpool.anchor.y = 0.5;
-    whirlpool.position.x = Math.floor(Math.random() * 380) + 10;
-    whirlpool.position.y = Math.floor(Math.random() * 380) + 10;
+    whirlpool.position.x = Math.floor(Math.random() * 360) + 50;
+    whirlpool.position.y = Math.floor(Math.random() * 360) + 50;
     stage.addChild(whirlpool);
     var newLength = whirls.push(whirlpool);
   }
@@ -84,6 +90,13 @@ function animate(){
       character.position.x = whirls[i].position.x;
       character.position.y = whirls[i].position.y;
       endgame();
+    }
+    if (Math.abs(character.position.x - finishLine.position.x) <= 5 && Math.abs(character.position.y - finishLine.position.y) <= 5){
+      level += 1;
+      levelBoard.setText("Level: " + level);
+      fiveMore();
+      character.position.x = 20;
+      character.position.y = 20;
     }
   }
   renderer.render(stage);
