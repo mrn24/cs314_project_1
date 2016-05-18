@@ -13,11 +13,14 @@ stage.addChild(background);
 var texture = PIXI.Texture.fromImage("hoegarth.png");
 var whirltex = PIXI.Texture.fromImage("whirlpool.png");
 var finishtex = PIXI.Texture.fromImage("finishline.png");
+var endgameText = new PIXI.Text("You were sucked in a whirlpool!", {font:"25px Arial", fill:"yellow"});
 
 var character = new PIXI.Sprite(texture);
 var finishLine = new PIXI.Sprite(finishtex);
 
 var level = 1;
+var levelBoard = new PIXI.Text("Level: " + level, {font:"50px Arial", fill:"yellow"});
+
 var whirls = [];
 
 character.scale.x = 0.2;
@@ -38,15 +41,18 @@ finishLine.position.y = 380;
 stage.addChild(character);
 stage.addChild(finishLine);
 
-for (var i = 0; i < level*5; i++){
-  var whirlpool = new PIXI.Sprite(whirltex);
-  whirlpool.anchor.x = 0.5;
-  whirlpool.anchor.y = 0.5;
-  whirlpool.position.x = Math.floor(Math.random() * 380) + 10;
-  whirlpool.position.y = Math.floor(Math.random() * 380) + 10;
-  stage.addChild(whirlpool);
-  var newLength = whirls.push(whirlpool);
+function fiveMore(){
+  for (var i = 0; i < 5; i++){
+    var whirlpool = new PIXI.Sprite(whirltex);
+    whirlpool.anchor.x = 0.5;
+    whirlpool.anchor.y = 0.5;
+    whirlpool.position.x = Math.floor(Math.random() * 380) + 10;
+    whirlpool.position.y = Math.floor(Math.random() * 380) + 10;
+    stage.addChild(whirlpool);
+    var newLength = whirls.push(whirlpool);
+  }
 }
+fiveMore();
 
 function keydownEventHandler(e){
   if (e.keyCode == 87){//W
@@ -65,11 +71,16 @@ function keydownEventHandler(e){
 
 document.addEventListener('keydown', keydownEventHandler);
 
+function endgame(){
+  stage.addChild(endgameText);
+}
+
+
 function animate(){
   requestAnimationFrame(animate);
   for(var i = 0; i < level*5; i++){
     whirls[i].rotation += 0.1;
-    if (whirls[i].position.x - character.position.x < 10 || whirls[i].position.x - character.position.x > -10 || whirls[i].position.y - character.position.y < 10 || whirls[i].position.y - character.position.y > -10){
+    if (Math.abs(character.position.x - whirls[i].position.x) <= 40 && Math.abs(character.position.y - whirls[i].position.y) <= 40){
       character.position.x = whirls[i].position.x;
       character.position.y = whirls[i].position.y;
       endgame();
@@ -78,7 +89,3 @@ function animate(){
   renderer.render(stage);
 }
 animate();
-
-function endgame(){
-  pass;
-}
