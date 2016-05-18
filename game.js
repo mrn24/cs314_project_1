@@ -1,25 +1,67 @@
 var gameport = document.getElementById("gameport");
 
-var renderer = PIXI.autoDetectRenderer(400, 400, {backgroundColor: 0x3344ee});
+var renderer = PIXI.autoDetectRenderer(400, 400, {backgroundColor: 0x00BFFF});
 gameport.appendChild(renderer.view);
+
+var background = PIXI.Sprite.fromImage("button_test_BG.jpg");
 
 var stage = new PIXI.Container();
 
-var texture = PIXI.Texture.fromImage("Spades.png");
+// add background to stage..
+stage.addChild(background);
 
-var sprite = new PIXI.Sprite(texture);
+var texture = PIXI.Texture.fromImage("hoegarth.png");
+var whirltex = PIXI.Texture.fromImage("Whirlpool.png");
 
-sprite.anchor.x = 0.5;
-sprite.anchor.y = 0.5;
+var character = new PIXI.Sprite(texture);
 
-sprite.position.x = 200;
-sprite.position.y = 200;
+var level = 1;
+var whirls = [];
 
-stage.addChild(sprite);
+character.scale.x = 0.2;
+character.scale.y = 0.2;
 
-function animate() {
+character.anchor.x = 0.5;
+character.anchor.y = 0.5;
+
+character.position.x = 20;
+character.position.y = 20;
+
+stage.addChild(character);
+
+for (var i = 0; i < level*5; i++){
+  var whirlpool = new PIXI.Sprite(whirltex);
+  whirlpool.scale.x = 0.2;
+  whirlpool.scale.y = 0.2;
+  whirlpool.anchor.x = 0.5;
+  whirlpool.anchor.y = 0.5;
+  whirlpool.position.x = Math.floor(Math.random() * 380) + 10;
+  whirlpool.position.y = Math.floor(Math.random() * 380) + 10;
+  var newLength = whirls.push(whirlpool);
+}
+
+function keydownEventHandler(e){
+  if (e.keyCode == 87){//W
+    character.position.y -= 10;
+  }
+  if (e.keyCode == 83){//S
+    character.position.y += 10;
+  }
+  if (e.keyCode == 65){//A
+    character.position.x -= 10;
+  }
+  if (e.keyCode == 68){//D
+    character.position.x += 10;
+  }
+}
+
+document.addEventListener('keydown', keydownEventHandler);
+
+function animate(){
   requestAnimationFrame(animate);
-  sprite.rotation += 0.1;
+  for(var i = 0; i < level*5; i++){
+    whirls[i].rotation += 0.1;
+  }
   renderer.render(stage);
 }
 animate();
