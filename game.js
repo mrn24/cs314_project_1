@@ -62,16 +62,24 @@ fiveMore();
 
 function keydownEventHandler(e){
   if (e.keyCode == 87){//W
-    character.position.y -= 10;
+    if(character.position.y > 0){
+      character.position.y -= 10;
+    }
   }
   if (e.keyCode == 83){//S
-    character.position.y += 10;
+    if(character.position.y < 400){
+      character.position.y += 10;
+    }
   }
   if (e.keyCode == 65){//A
-    character.position.x -= 10;
+    if(character.position.x > 0){
+      character.position.x -= 10;
+    }
   }
   if (e.keyCode == 68){//D
-    character.position.x += 10;
+    if(character.position.x < 400){
+      character.position.x += 10;
+    }
   }
 }
 
@@ -89,6 +97,7 @@ function animate(){
     if (Math.abs(character.position.x - whirls[i].position.x) <= 40 && Math.abs(character.position.y - whirls[i].position.y) <= 40){
       character.position.x = whirls[i].position.x;
       character.position.y = whirls[i].position.y;
+      character.rotation -= 0.1;
       endgame();
     }
     if (Math.abs(character.position.x - finishLine.position.x) <= 5 && Math.abs(character.position.y - finishLine.position.y) <= 5){
